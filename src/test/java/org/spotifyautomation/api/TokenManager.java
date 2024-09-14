@@ -7,6 +7,7 @@ import java.time.Instant;
 import java.util.HashMap;
 
 import static io.restassured.RestAssured.given;
+import static org.spotifyautomation.api.Route.*;
 import static org.spotifyautomation.api.SpecBuilder.getAccountRequestSpec;
 import static org.spotifyautomation.api.SpecBuilder.getResponseSpec;
 
@@ -42,7 +43,7 @@ public class TokenManager {
         Response response = given(getAccountRequestSpec())
             .formParams(formParams).
         when()
-                .post("/api/token").
+                .post(API + TOKEN).
         then()
                 .spec(getResponseSpec())
                 .extract()
