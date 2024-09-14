@@ -3,6 +3,7 @@ package org.spotifyautomation.api;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.filter.log.LogDetail;
+import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 
@@ -14,6 +15,15 @@ public class SpecBuilder {
                 .setBasePath("/v1")
                 .log(LogDetail.ALL)
                 .build();
+    }
+
+    public static RequestSpecification getAccountRequestSpec() {
+        return new RequestSpecBuilder()
+                .setBaseUri("https://accounts.spotify.com")
+                .setContentType(ContentType.URLENC)
+                .log(LogDetail.ALL)
+                .build();
+
     }
 
     public static ResponseSpecification getResponseSpec() {

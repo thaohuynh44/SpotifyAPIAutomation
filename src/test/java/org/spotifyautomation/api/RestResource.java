@@ -1,8 +1,6 @@
 package org.spotifyautomation.api;
 
-import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import org.spotifyautomation.pojo.Playlist;
 
 import static io.restassured.RestAssured.given;
 import static org.spotifyautomation.api.SpecBuilder.getRequestSpec;
