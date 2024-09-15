@@ -4,6 +4,7 @@ import io.restassured.response.Response;
 import org.spotifyautomation.api.applicationApi.PlaylistApi;
 import org.spotifyautomation.pojo.ErrorRoot;
 import org.spotifyautomation.pojo.Playlist;
+import org.spotifyautomation.utils.AssertionHelper;
 import org.testng.annotations.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -13,10 +14,10 @@ public class PlaylistTests {
 
     @Test
     void shouldBeAbleToCreatePlaylist() {
-        Playlist requestPlaylist = new Playlist();
-        requestPlaylist.setName("New RestAssured playlist")
-            .setDescription("New playlist for learning Rest Assured")
-            .setPublic(false);
+        Playlist requestPlaylist = Playlist.builder()
+                .name("New RestAssured playlist")
+                .description("New playlist for learning Rest Assured")
+                ._public(false).build();
 
         String userId = "316ugqqwclaof3kscof6ess2o2ve";
 
@@ -27,7 +28,7 @@ public class PlaylistTests {
 
         assertThat(responsePlaylist.getName(), equalTo(requestPlaylist.getName()));
         assertThat(responsePlaylist.getDescription(), equalTo(requestPlaylist.getDescription()));
-        assertThat(responsePlaylist.getPublic(), equalTo(requestPlaylist.getPublic()));
+        assertThat(responsePlaylist.get_public(), equalTo(requestPlaylist.get_public()));
     }
 
     @Test
@@ -42,15 +43,15 @@ public class PlaylistTests {
         Playlist responsePlaylist = response.as(Playlist.class);
 
         assertThat(responsePlaylist.getName(), equalTo("Update Playlist Name"));
-        assertThat(responsePlaylist.getPublic(), equalTo(true));
+        assertThat(responsePlaylist.get_public(), equalTo(true));
     }
 
     @Test
     void shouldBeAbleToUpdatePlaylist() {
-        Playlist requestPlaylist = new Playlist();
-        requestPlaylist.setName("Update Playlist Name")
-            .setDescription("Update playlist description")
-            .setPublic(false);
+        Playlist requestPlaylist = Playlist.builder()
+                .name("Update Playlist Name")
+                .description("Update playlist description")
+                ._public(false).build();
 
         String playlistId = "7yifSZlk96PGP0miWS6RNs";
 
@@ -61,27 +62,25 @@ public class PlaylistTests {
 
     @Test
     void shouldNotBeAbleToCreatePlaylistWithEmptyName() {
-        Playlist requestPlaylist = new Playlist();
-        requestPlaylist.setName("")
-            .setDescription("New playlist for learning Rest Assured")
-            .setPublic(false);
+        Playlist requestPlaylist = Playlist.builder()
+                .name("")
+                .description("New playlist for learning Rest Assured")
+                ._public(false).build();
         String userId = "316ugqqwclaof3kscof6ess2o2ve";
 
         Response response = PlaylistApi.post(requestPlaylist, userId);
         assertThat(response.statusCode(), equalTo(400));
 
-        ErrorRoot errorRepsonse =  response.as(ErrorRoot.class);
-
-        assertThat(errorRepsonse.getError().getStatus(), equalTo(400));
-        assertThat(errorRepsonse.getError().getMessage(), equalTo("Missing required field: name"));
+        ErrorRoot errorResponse =  response.as(ErrorRoot.class);
+        AssertionHelper.assertErrorMessage(errorResponse, 400, "Missing required field: name");
     }
 
     @Test
     void shouldNotBeAbleToCreatePlaylistWithInvalidToken() {
-        Playlist requestPlaylist = new Playlist();
-        requestPlaylist.setName("New RestAssured playlist")
-            .setDescription("New playlist for learning Rest Assured")
-            .setPublic(false);
+     Playlist requestPlaylist = Playlist.builder()
+                .name("New RestAssured playlist")
+                .description("New playlist for learning Rest Assured")
+                ._public(false).build();
 
         String invalidToken = "1234";
         String userId = "316ugqqwclaof3kscof6ess2o2ve";
@@ -90,8 +89,6 @@ public class PlaylistTests {
         assertThat(response.statusCode(), equalTo(401));
 
         ErrorRoot errorResponse = response.as(ErrorRoot.class);
-
-        assertThat(errorResponse.getError().getStatus(), equalTo(401));
-        assertThat(errorResponse.getError().getMessage(), equalTo("Invalid access token"));
+        AssertionHelper.assertErrorMessage(errorResponse, 401, "Invalid access token");
     }
 }
