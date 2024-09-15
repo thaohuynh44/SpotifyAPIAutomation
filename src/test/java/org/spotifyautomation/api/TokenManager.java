@@ -2,6 +2,7 @@ package org.spotifyautomation.api;
 
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import org.spotifyautomation.utils.ConfigLoader;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -35,9 +36,9 @@ public class TokenManager {
 
     private static Response renewToken() {
         HashMap<String, String> formParams = new HashMap<String, String>();
-        formParams.put("client_id", "f16c4541d4c146b4a160b1496a5a5434");
-        formParams.put("client_secret", "fca34a1237f447f7affdca7dc1b34630");
-        formParams.put("refresh_token", "AQC-5C65yZwvwWaDRktFY5zKj_hAxjVFO8hBSez6LlTy2tkea3P0GQHxH8c9t_fMEp0glzo_DqSieBc6UsEC29kTIcyodt1YnD75rEHz1Xv6XMc1jiLhEZhPwRnsgV8LAQs");
+        formParams.put("client_id", ConfigLoader.getInstance().getProperty("client_id"));
+        formParams.put("client_secret", ConfigLoader.getInstance().getProperty("client_secret"));
+        formParams.put("refresh_token", ConfigLoader.getInstance().getProperty("refresh_token"));
         formParams.put("grant_type", "refresh_token");
 
         Response response = given(getAccountRequestSpec())
